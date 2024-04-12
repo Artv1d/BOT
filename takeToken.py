@@ -13,10 +13,18 @@ def generate_unique_token():
     items = cur.fetchall()
     # Получаем результат запроса
     for el in items:
-        existing_tokens.add(el[5])
+        existing_tokens.add(int(el[5]))
     cur.close()
     conn.close()
-    available_tokens = set(range(1, 5)) - existing_tokens
+    available_tokens = set(range(1, 2)) - existing_tokens
     if not available_tokens:
         return None
     return (random.choice(list(available_tokens)))
+
+
+def delete_art(token):
+    conn = sqlite3.connect('shop.sql')
+    cur = conn.cursor()
+    cur.execute("DELETE FROM tokens WHERE token = ?", (token,))
+    cur.close()
+    conn.close()
